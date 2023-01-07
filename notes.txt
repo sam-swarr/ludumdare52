@@ -4,6 +4,8 @@ TODO:
   - revisit using other collider shapes since the impulse hack should probably fix original issue
   - determine what the limiting mechanic is (limited number of ramps at a time? limited total ramp length?)
 
+  - disallow drawing ramps through the player
+
 - moon harvester moves across 2D map; reverses when it hits a wall but capable of climbing ramps up to 45 degrees
 - you have the ability to draw walls/ramps (up to 2 at a time) to help the moon harvester traverse obstacles and collect helium nodes
   - ramps are drawn with either LMB or RMB; once you add another ramp of either the LMB or RMB type, the previous one of that type disappears
