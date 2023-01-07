@@ -14,13 +14,18 @@ public class MoonHarvester : MonoBehaviour
 
     [Tooltip("Reverse direction threshold (in frames).")]
     [SerializeField]
-    private int STATIONARY_FRAME_THRESHOLD;
+    private int StationFrameThreshold;
+
+    [Tooltip("Reverse direction impulse strength.")]
+    [SerializeField]
+    private float ReverseDirectionImpulseStrength;
 
     private Rigidbody2D MoonHarvesterRB;
     private Collider2D MoonHarvesterCollider;
     private Vector3 PreviousPosition;
     [SerializeField]
     private int NumFramesStationary;
+    [SerializeField]
     private bool InContactWithGround = false;
 
     // Start is called before the first frame update
@@ -33,8 +38,32 @@ public class MoonHarvester : MonoBehaviour
 
     void FixedUpdate()
     {
-        InContactWithGround = MoonHarvesterCollider.IsTouchingLayers(LayerMask.GetMask("Platforms"));
+        /**
+         *   Check to see if harvester is stuck and should reverse directions.
+         */
+        if (PreviousPosition == transform.position)
+        {
+            NumFramesStationary++;
+            // Reverse direction if we haven't moved in the last several frames.
+            if (NumFramesStationary >= StationFrameThreshold)
+            {
+                HorizontalForce *= -1;
+                // Give the harvester a little push so that it won't get stuck under platforms in some situations.
+                MoonHarvesterRB.AddForce(new Vector2(HorizontalForce * ReverseDirectionImpulseStrength, 0f), ForceMode2D.Impulse);
+                NumFramesStationary = 0;
+            }
+        }
+        else
+        {
+            NumFramesStationary = 0;
+        }
+        PreviousPosition = transform.position;
 
+
+        /**
+         *  Apply force to move harvester.
+         */
+        InContactWithGround = MoonHarvesterCollider.IsTouchingLayers(LayerMask.GetMask("Platforms"));
         if (InContactWithGround)
         {
             MoonHarvesterRB.AddForce(new Vector2(HorizontalForce, 0f));
@@ -45,24 +74,6 @@ public class MoonHarvester : MonoBehaviour
                 MoonHarvesterRB.velocity = MoonHarvesterRB.velocity.normalized * MaxSpeed;
             }
         }
-    }
-
-    private void LateUpdate()
-    {
-        if (PreviousPosition == transform.position)
-        {
-            NumFramesStationary++;
-            // Reverse direction if we haven't moved in the last several frames.
-            if (NumFramesStationary >= STATIONARY_FRAME_THRESHOLD)
-            {
-                HorizontalForce *= -1;
-                NumFramesStationary = 0;
-            }
-        } else
-        {
-            NumFramesStationary = 0;
-        }
-        PreviousPosition = transform.position;
     }
 
     //void OnCollisionEnter2D(Collision2D collision)
