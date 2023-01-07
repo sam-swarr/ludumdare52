@@ -13,6 +13,10 @@ public class RampSpawner : MonoBehaviour
     [SerializeField]
     private float RampHeliumCost = 50f;
 
+    [Tooltip("LineRenderer for showing where ramp will be built.")]
+    [SerializeField]
+    private LineRenderer RampLineRenderer;
+
     [SerializeField]
     private bool IsLMBDown;
     [SerializeField]
@@ -69,14 +73,21 @@ public class RampSpawner : MonoBehaviour
             }
         }
 
-        if (IsLMBDown)
+        if (IsLMBDown || IsRMBDown)
         {
-            Debug.DrawLine(LMB_Down_Position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.red);
-        }
+            Vector2 startPos = IsLMBDown ? LMB_Down_Position : RMB_Down_Position;
+            Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RampLineRenderer.enabled = true;
+            RampLineRenderer.SetPosition(0, startPos);
+            RampLineRenderer.SetPosition(1, mouseWorldPos);
 
-        if (IsRMBDown)
+            Color c = IsLMBDown ? Color.red : Color.blue;
+
+            RampLineRenderer.startColor = c;
+            RampLineRenderer.endColor = c;
+        } else
         {
-            Debug.DrawLine(RMB_Down_Position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.blue);
+            RampLineRenderer.enabled = false;
         }
     }
 
