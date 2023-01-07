@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RampSpawner : MonoBehaviour
 {
+    [Tooltip("Ramp Prefab")]
+    [SerializeField]
+    private GameObject RampPrefab;
+
     [SerializeField]
     private bool IsLMBDown;
     [SerializeField]
@@ -35,6 +40,7 @@ public class RampSpawner : MonoBehaviour
         {
             IsLMBDown = false;
             LMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            SpawnRamp(LMB_Down_Position, LMB_Up_Position);
         }
         else if (Input.GetMouseButtonDown(1) && !IsLMBDown)
         {
@@ -55,5 +61,16 @@ public class RampSpawner : MonoBehaviour
         {
             Debug.DrawLine(RMB_Down_Position, Camera.main.ScreenToWorldPoint(Input.mousePosition), Color.blue);
         }
+    }
+
+    private void SpawnRamp(Vector2 endpointOne, Vector2 endpointTwo)
+    {
+        print("SPAWN");
+        Vector3 midpoint = new Vector3(
+            endpointOne.x + (endpointTwo.x - endpointOne.x) / 2.0f,
+            endpointOne.y + (endpointTwo.y - endpointOne.y) / 2.0f,
+            0f);
+
+        Instantiate(RampPrefab, midpoint, Quaternion.identity);
     }
 }
