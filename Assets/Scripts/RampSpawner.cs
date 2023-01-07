@@ -15,6 +15,7 @@ public class RampSpawner : MonoBehaviour
     private Vector2 LMB_Down_Position;
     [SerializeField]
     private Vector2 LMB_Up_Position;
+    private GameObject LMB_Ramp;
 
     [SerializeField]
     private bool IsRMBDown;
@@ -22,6 +23,7 @@ public class RampSpawner : MonoBehaviour
     private Vector2 RMB_Down_Position;
     [SerializeField]
     private Vector2 RMB_Up_Position;
+    private GameObject RMB_Ramp;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +42,11 @@ public class RampSpawner : MonoBehaviour
         {
             IsLMBDown = false;
             LMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            SpawnRamp(LMB_Down_Position, LMB_Up_Position);
+            if (LMB_Ramp != null)
+            {
+                Destroy(LMB_Ramp);
+            }
+            LMB_Ramp = SpawnRamp(LMB_Down_Position, LMB_Up_Position);
         }
         else if (Input.GetMouseButtonDown(1) && !IsLMBDown)
         {
@@ -50,6 +56,11 @@ public class RampSpawner : MonoBehaviour
         else if (Input.GetMouseButtonUp(1)) {
             IsRMBDown = false;
             RMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (RMB_Ramp != null)
+            {
+                Destroy(RMB_Ramp);
+            }
+            RMB_Ramp = SpawnRamp(RMB_Down_Position, RMB_Up_Position);
         }
 
         if (IsLMBDown)
@@ -63,7 +74,7 @@ public class RampSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnRamp(Vector2 endpointOne, Vector2 endpointTwo)
+    private GameObject SpawnRamp(Vector2 endpointOne, Vector2 endpointTwo)
     {
         Vector3 midpoint = new(
             endpointOne.x + (endpointTwo.x - endpointOne.x) / 2.0f,
@@ -77,5 +88,6 @@ public class RampSpawner : MonoBehaviour
             Vector3.Distance(endpointOne, endpointTwo),
             newRamp.transform.localScale.y,
             newRamp.transform.localScale.z);
+        return newRamp;
     }
 }

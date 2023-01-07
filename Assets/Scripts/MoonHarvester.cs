@@ -66,12 +66,12 @@ public class MoonHarvester : MonoBehaviour
         /**
          *  Check to see if harvester flipped over.
          */
-        if ((FlippedOver && !IsFlippedOver()) || (!FlippedOver && IsFlippedOver()))
-        {
-            print("FLIP");
-            ReverseDirection();
-            FlippedOver = !FlippedOver;
-        }
+        //if ((FlippedOver && !IsFlippedOver()) || (!FlippedOver && IsFlippedOver()))
+        //{
+        //    print("FLIP");
+        //    ReverseDirection();
+        //    FlippedOver = !FlippedOver;
+        //}
 
         /**
          *  Apply force to move harvester.
