@@ -40,11 +40,15 @@ public class RampSpawner : MonoBehaviour
         {
             IsLMBDown = false;
             LMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (LMB_Ramp != null)
+            GameObject newRamp = SpawnRamp(LMB_Down_Position, LMB_Up_Position, Ramp.RampType.LMB);
+            if (newRamp != null)
             {
-                Destroy(LMB_Ramp);
+                if (LMB_Ramp != null)
+                {
+                    Destroy(LMB_Ramp);
+                }
+                LMB_Ramp = newRamp;
             }
-            LMB_Ramp = SpawnRamp(LMB_Down_Position, LMB_Up_Position, Ramp.RampType.LMB);
         }
         else if (Input.GetMouseButtonDown(1) && !IsLMBDown)
         {
@@ -54,11 +58,15 @@ public class RampSpawner : MonoBehaviour
         else if (Input.GetMouseButtonUp(1) && !IsLMBDown) {
             IsRMBDown = false;
             RMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (RMB_Ramp != null)
+            GameObject newRamp = SpawnRamp(RMB_Down_Position, RMB_Up_Position, Ramp.RampType.RMB);
+            if (newRamp != null)
             {
-                Destroy(RMB_Ramp);
+                if (RMB_Ramp != null)
+                {
+                    Destroy(RMB_Ramp);
+                }
+                RMB_Ramp = newRamp;
             }
-            RMB_Ramp = SpawnRamp(RMB_Down_Position, RMB_Up_Position, Ramp.RampType.RMB);
         }
 
         if (IsLMBDown)
@@ -74,6 +82,13 @@ public class RampSpawner : MonoBehaviour
 
     private GameObject SpawnRamp(Vector2 endpointOne, Vector2 endpointTwo, Ramp.RampType rampType)
     {
+        // Early exit and don't spawn anything if ramp would intersect with harvester
+        RaycastHit2D harvesterHit = Physics2D.Linecast(endpointOne, endpointTwo, LayerMask.GetMask("Harvester"));
+        if (harvesterHit.collider != null)
+        {
+            return null;
+        }
+
         Vector3 midpoint = new(
             endpointOne.x + (endpointTwo.x - endpointOne.x) / 2.0f,
             endpointOne.y + (endpointTwo.y - endpointOne.y) / 2.0f,

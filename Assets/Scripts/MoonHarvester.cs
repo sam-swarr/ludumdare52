@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MoonHarvester : MonoBehaviour
 {
+    public static MoonHarvester Instance = null;
+
     [Tooltip("GameObject representing top center point of harvester")]
     [SerializeField]
     private GameObject TopPoint;
@@ -37,6 +39,7 @@ public class MoonHarvester : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        MoonHarvester.Instance = this;
         MoonHarvesterRB = this.GetComponent<Rigidbody2D>();
         MoonHarvesterCollider = this.GetComponent<Collider2D>();
         PreviousPosition = transform.position;
