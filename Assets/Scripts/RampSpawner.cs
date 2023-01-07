@@ -17,6 +17,11 @@ public class RampSpawner : MonoBehaviour
     [SerializeField]
     private LineRenderer RampLineRenderer;
 
+    private Color LMBRampColor = new Color(1f, 0f, 0f, 1f);
+    private Color LMBInvalidRampColor = new Color(1f, 0f, 0f, 0.5f);
+    private Color RMBRampColor = new Color(0f, 0f, 1f, 1f);
+    private Color RMBInvalidRampColor = new Color(0f, 0f, 1f, 0.5f);
+
     [SerializeField]
     private bool IsLMBDown;
     [SerializeField]
@@ -77,14 +82,22 @@ public class RampSpawner : MonoBehaviour
         {
             Vector2 startPos = IsLMBDown ? LMB_Down_Position : RMB_Down_Position;
             Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            bool harvesterHit = Physics2D.Linecast(startPos, mouseWorldPos, LayerMask.GetMask("Harvester")).collider != null;
+            Color color;
+            if (IsLMBDown)
+            {
+                color = harvesterHit ? LMBInvalidRampColor: LMBRampColor;
+            } else
+            {
+                color = harvesterHit ? RMBInvalidRampColor : RMBRampColor;
+            }
+
             RampLineRenderer.enabled = true;
             RampLineRenderer.SetPosition(0, startPos);
             RampLineRenderer.SetPosition(1, mouseWorldPos);
-
-            Color c = IsLMBDown ? Color.red : Color.blue;
-
-            RampLineRenderer.startColor = c;
-            RampLineRenderer.endColor = c;
+            RampLineRenderer.startColor = color;
+            RampLineRenderer.endColor = color;
         } else
         {
             RampLineRenderer.enabled = false;
