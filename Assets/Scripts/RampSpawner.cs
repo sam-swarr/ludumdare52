@@ -65,12 +65,17 @@ public class RampSpawner : MonoBehaviour
 
     private void SpawnRamp(Vector2 endpointOne, Vector2 endpointTwo)
     {
-        print("SPAWN");
-        Vector3 midpoint = new Vector3(
+        Vector3 midpoint = new(
             endpointOne.x + (endpointTwo.x - endpointOne.x) / 2.0f,
             endpointOne.y + (endpointTwo.y - endpointOne.y) / 2.0f,
             0f);
 
-        Instantiate(RampPrefab, midpoint, Quaternion.identity);
+        float rotationAngle = Mathf.Atan2(endpointTwo.y - midpoint.y, endpointTwo.x - midpoint.x) * Mathf.Rad2Deg;
+        GameObject newRamp = Instantiate(RampPrefab, midpoint, Quaternion.identity);
+        newRamp.transform.Rotate(0, 0, rotationAngle);
+        newRamp.transform.localScale = new Vector3(
+            Vector3.Distance(endpointOne, endpointTwo),
+            newRamp.transform.localScale.y,
+            newRamp.transform.localScale.z);
     }
 }
