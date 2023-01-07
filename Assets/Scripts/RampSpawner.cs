@@ -9,6 +9,10 @@ public class RampSpawner : MonoBehaviour
     [SerializeField]
     private GameObject RampPrefab;
 
+    [Tooltip("Amount of helium per unit in length that ramps cost to build.")]
+    [SerializeField]
+    private float RampHeliumCost = 50f;
+
     [SerializeField]
     private bool IsLMBDown;
     [SerializeField]
@@ -25,12 +29,6 @@ public class RampSpawner : MonoBehaviour
     private Vector2 RMB_Up_Position;
     private GameObject RMB_Ramp;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && !IsRMBDown)
@@ -38,7 +36,7 @@ public class RampSpawner : MonoBehaviour
             IsLMBDown = true;
             LMB_Down_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0) && !IsRMBDown)
         {
             IsLMBDown = false;
             LMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -46,21 +44,21 @@ public class RampSpawner : MonoBehaviour
             {
                 Destroy(LMB_Ramp);
             }
-            LMB_Ramp = SpawnRamp(LMB_Down_Position, LMB_Up_Position);
+            LMB_Ramp = SpawnRamp(LMB_Down_Position, LMB_Up_Position, Ramp.RampType.LMB);
         }
         else if (Input.GetMouseButtonDown(1) && !IsLMBDown)
         {
             IsRMBDown = true;
             RMB_Down_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
-        else if (Input.GetMouseButtonUp(1)) {
+        else if (Input.GetMouseButtonUp(1) && !IsLMBDown) {
             IsRMBDown = false;
             RMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (RMB_Ramp != null)
             {
                 Destroy(RMB_Ramp);
             }
-            RMB_Ramp = SpawnRamp(RMB_Down_Position, RMB_Up_Position);
+            RMB_Ramp = SpawnRamp(RMB_Down_Position, RMB_Up_Position, Ramp.RampType.RMB);
         }
 
         if (IsLMBDown)
@@ -74,20 +72,26 @@ public class RampSpawner : MonoBehaviour
         }
     }
 
-    private GameObject SpawnRamp(Vector2 endpointOne, Vector2 endpointTwo)
+    private GameObject SpawnRamp(Vector2 endpointOne, Vector2 endpointTwo, Ramp.RampType rampType)
     {
         Vector3 midpoint = new(
             endpointOne.x + (endpointTwo.x - endpointOne.x) / 2.0f,
             endpointOne.y + (endpointTwo.y - endpointOne.y) / 2.0f,
             0f);
 
+        float rampLength = Vector3.Distance(endpointOne, endpointTwo);
+
         float rotationAngle = Mathf.Atan2(endpointTwo.y - midpoint.y, endpointTwo.x - midpoint.x) * Mathf.Rad2Deg;
         GameObject newRamp = Instantiate(RampPrefab, midpoint, Quaternion.identity);
         newRamp.transform.Rotate(0, 0, rotationAngle);
         newRamp.transform.localScale = new Vector3(
-            Vector3.Distance(endpointOne, endpointTwo),
+            rampLength,
             newRamp.transform.localScale.y,
             newRamp.transform.localScale.z);
+        newRamp.GetComponent<Ramp>().SetRampType(rampType);
+
+        GameStateManager.Instance.RampBuilt((int)(rampLength * RampHeliumCost));
+
         return newRamp;
     }
 }

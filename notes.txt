@@ -4,7 +4,10 @@ TODO:
   - revisit using other collider shapes since the impulse hack should probably fix original issue
   - determine what the limiting mechanic is (limited number of ramps at a time? limited total ramp length?)
 
+  - display cost of ramp while dragging line
+  - cap ramp length depending on fuel amount
   - disallow drawing ramps through the player
+  - have clicking other mouse button while other is held down cancel the ramp creation
 
 - moon harvester moves across 2D map; reverses when it hits a wall but capable of climbing ramps up to 45 degrees
 - you have the ability to draw walls/ramps (up to 2 at a time) to help the moon harvester traverse obstacles and collect helium nodes
