@@ -61,7 +61,7 @@ public class LevelSpawner : MonoBehaviour
 
     private Ramp[] StaticPlatforms;
 
-    private Vector2 HeliumSize = new(0.4f, 0.64f);
+    private Vector2 HeliumSize = new(0.5f, 0.8f);
 
     void Start()
     {
