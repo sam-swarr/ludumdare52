@@ -135,7 +135,7 @@ public class RampSpawner : MonoBehaviour
         Vector3 midpoint = new(
             endpointOne.x + (endpointTwo.x - endpointOne.x) / 2.0f,
             endpointOne.y + (endpointTwo.y - endpointOne.y) / 2.0f,
-            0f);
+            1f);
 
         float rampLength = Vector3.Distance(endpointOne, endpointTwo);
 
