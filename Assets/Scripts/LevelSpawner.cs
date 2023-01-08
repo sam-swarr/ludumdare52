@@ -56,11 +56,6 @@ public class LevelSpawner : MonoBehaviour
 
     private float MinX, MinY, MaxX, MaxY;
 
-    private int NumPlatformsToSpawn;
-    private int NumPlatformsSpawned = 0;
-
-    private Ramp[] StaticPlatforms;
-
     private Vector2 HeliumSize = new(0.5f, 0.8f);
 
     private List<HeliumCanister> HeliumCanisters = new List<HeliumCanister>();
@@ -71,11 +66,6 @@ public class LevelSpawner : MonoBehaviour
         MaxX = RightBorder.transform.position.x;
         MinY = TopBorder.transform.position.y;
         MaxY = BottomBorder.transform.position.y;
-
-        NumPlatformsToSpawn = Random.Range(MinNumStaticPlatforms, MaxNumStaticPlatforms + 1);
-        StaticPlatforms = new Ramp[NumPlatformsToSpawn];
-
-        // SpawnStaticPlatforms();
 
         NextHeliumSpawn = Random.Range(MinDurationBetweenHeliumSpawns, MaxDurationBetweenHeliumSpawns);
     }
@@ -99,31 +89,6 @@ public class LevelSpawner : MonoBehaviour
                 NextHeliumSpawn = Random.Range(MinDurationBetweenHeliumSpawns, MaxDurationBetweenHeliumSpawns);
             }
         }
-        
-
-
-
-        //if (NumPlatformsSpawned < NumPlatformsToSpawn)
-        //{
-        //    print("Spawning ramp " + NumPlatformsSpawned);
-        //    Vector2 startPoint = new(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
-        //    Vector2 directionPoint = new(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
-
-        //    Vector2 ray = (directionPoint - startPoint).normalized * Random.Range(MinLengthStaticPlatforms, MaxLengthStaticPlatforms);
-        //    Vector2 endPoint = startPoint + ray;
-
-        //    GameObject ramp = RampSpawner.TrySpawnRamp(
-        //        startPoint,
-        //        endPoint,
-        //        Ramp.RampType.Static,
-        //        LayerMask.GetMask("Harvester", "Platforms"));
-
-        //    if (ramp != null)
-        //    {
-        //        StaticPlatforms[NumPlatformsSpawned] = ramp.GetComponent<Ramp>();
-        //        NumPlatformsSpawned++;
-        //    }
-        //}
     }
 
     public void Reset()
@@ -154,31 +119,31 @@ public class LevelSpawner : MonoBehaviour
     // TODO: this doesn't seem to detect collisions with the other platforms being spawned, probably because
     // the Physics2D.Linecast used in TrySpawnRamp doesn't yet know about the ramps being spawned since a physics
     // update hasn't happened yet. Write a function to determine if to line segments would intersect and use that instead.
-    private void SpawnStaticPlatforms()
-    {
-        int numPlatforms = Random.Range(MinNumStaticPlatforms, MaxNumStaticPlatforms + 1);
-        StaticPlatforms = new Ramp[numPlatforms];
-        int i = 0;
-        while (i < numPlatforms)
-        {
-            print("Spawning ramp " + i);
-            Vector2 startPoint = new(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
-            Vector2 directionPoint = new (Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
+    //private void SpawnStaticPlatforms()
+    //{
+    //    int numPlatforms = Random.Range(MinNumStaticPlatforms, MaxNumStaticPlatforms + 1);
+    //    StaticPlatforms = new Ramp[numPlatforms];
+    //    int i = 0;
+    //    while (i < numPlatforms)
+    //    {
+    //        print("Spawning ramp " + i);
+    //        Vector2 startPoint = new(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
+    //        Vector2 directionPoint = new (Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
             
-            Vector2 ray = (directionPoint - startPoint).normalized * Random.Range(MinLengthStaticPlatforms, MaxLengthStaticPlatforms);
-            Vector2 endPoint = startPoint + ray;
+    //        Vector2 ray = (directionPoint - startPoint).normalized * Random.Range(MinLengthStaticPlatforms, MaxLengthStaticPlatforms);
+    //        Vector2 endPoint = startPoint + ray;
 
-            GameObject ramp = RampSpawner.TrySpawnRamp(
-                startPoint,
-                endPoint,
-                Ramp.RampType.Static,
-                LayerMask.GetMask("Harvester", "Platforms"));
+    //        GameObject ramp = RampSpawner.TrySpawnRamp(
+    //            startPoint,
+    //            endPoint,
+    //            Ramp.RampType.Static,
+    //            LayerMask.GetMask("Harvester", "Platforms"));
 
-            if (ramp != null)
-            {
-                StaticPlatforms[i] = ramp.GetComponent<Ramp>();
-                i++;
-            }
-        }
-    }
+    //        if (ramp != null)
+    //        {
+    //            StaticPlatforms[i] = ramp.GetComponent<Ramp>();
+    //            i++;
+    //        }
+    //    }
+    //}
 }

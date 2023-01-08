@@ -52,6 +52,12 @@ public class GameStateManager : MonoBehaviour
     [SerializeField]
     private int HeliumCanisterValue = 100;
 
+    [SerializeField]
+    private AudioSource HeliumCollectedSound;
+
+    [SerializeField]
+    private AudioSource ButtonSound;
+
     private int HeliumAmount = 1000;
     private int CanistersHarvested = 0;
 
@@ -85,6 +91,7 @@ public class GameStateManager : MonoBehaviour
     public void StartGame()
     {
         TitleGraphic.SetActive(false);
+        ButtonSound.Play();
 
         HeliumAmount = 1000;
         HeliumText.text = HeliumAmount.ToString();
@@ -104,6 +111,7 @@ public class GameStateManager : MonoBehaviour
     public void ShowTitleScreen()
     {
         State = GameState.TitleScreen;
+        ButtonSound.Play();
         GameOverDialog.SetActive(false);
         TitleGraphic.SetActive(true);
         HeliumText.gameObject.SetActive(false);
@@ -123,6 +131,8 @@ public class GameStateManager : MonoBehaviour
 
     public void HeliumCollected()
     {
+        HeliumCollectedSound.Play();
+
         HeliumAmount += HeliumCanisterValue;
         HeliumText.text = HeliumAmount.ToString();
 

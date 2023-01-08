@@ -43,6 +43,18 @@ public class MoonHarvester : MonoBehaviour
     [SerializeField]
     private float ReverseDirectionImpulseStrength;
 
+    [SerializeField]
+    private AudioSource HarvesterSound;
+
+    [SerializeField]
+    private AudioSource ReverseHarvesterSound;
+
+    [SerializeField]
+    private AudioSource HarvesterDeathSound;
+
+    [SerializeField]
+    private AudioSource ThumpSound;
+
     private Rigidbody2D MoonHarvesterRB;
     private Collider2D MoonHarvesterCollider;
     private Vector3 PreviousPosition;
@@ -50,6 +62,8 @@ public class MoonHarvester : MonoBehaviour
     private int NumFramesStationary;
     [SerializeField]
     private bool InContactWithGround = false;
+
+    private float PreviousVelocity;
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +73,7 @@ public class MoonHarvester : MonoBehaviour
         MoonHarvesterRB = this.GetComponent<Rigidbody2D>();
         MoonHarvesterCollider = this.GetComponent<Collider2D>();
         PreviousPosition = transform.position;
+        PreviousVelocity = MoonHarvesterRB.velocity.magnitude;
     }
 
     void FixedUpdate()
@@ -67,6 +82,13 @@ public class MoonHarvester : MonoBehaviour
         {
             return;
         }
+
+        float dVel = PreviousVelocity - MoonHarvesterRB.velocity.magnitude;
+        if (dVel > 1)
+        {
+            ThumpSound.Play();
+        }
+        PreviousVelocity = MoonHarvesterRB.velocity.magnitude;
 
         /**
          *   Check to see if harvester is stuck and should reverse directions.
@@ -115,6 +137,7 @@ public class MoonHarvester : MonoBehaviour
 
     public void TurnOn()
     {
+        HarvesterSound.Play();
         HarvesterForward.SetActive(true);
         HarvesterReverse.SetActive(false);
         HarvesterStatic.SetActive(false);
@@ -122,12 +145,15 @@ public class MoonHarvester : MonoBehaviour
 
     public void TurnOff()
     {
+        HarvesterSound.Stop();
+        HarvesterDeathSound.Play();
         HarvesterForward.SetActive(false);
         HarvesterReverse.SetActive(false);
         HarvesterStatic.SetActive(true);
     }
     private void ReverseDirection()
     {
+        ReverseHarvesterSound.Play();
         HorizontalForceDirection *= -1;
         // Give the harvester a little push so that it won't get stuck under platforms in some situations.
         MoonHarvesterRB.AddForce(new Vector2(HorizontalForce * HorizontalForceDirection * ReverseDirectionImpulseStrength, 0f), ForceMode2D.Impulse);

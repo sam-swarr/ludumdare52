@@ -40,6 +40,12 @@ public class RampSpawner : MonoBehaviour
     private Vector2 RMB_Up_Position;
     private GameObject RMB_Ramp;
 
+    [SerializeField]
+    private AudioSource RampPlacementSound;
+
+    [SerializeField]
+    private AudioSource InvalidRampPlacementSound;
+
     private void Start()
     {
         RampSpawner.Instance = this;
@@ -122,6 +128,7 @@ public class RampSpawner : MonoBehaviour
         RaycastHit2D hit = Physics2D.Linecast(endpointOne, endpointTwo, layerMask);
         if (hit.collider != null)
         {
+            InvalidRampPlacementSound.Play();
             return null;
         }
 
@@ -146,6 +153,8 @@ public class RampSpawner : MonoBehaviour
         {
             GameStateManager.Instance.RampBuilt((int)(rampLength * RampHeliumCost));
         }
+
+        RampPlacementSound.Play();
 
         return newRamp;
     }
