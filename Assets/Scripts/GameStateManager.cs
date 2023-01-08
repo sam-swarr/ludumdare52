@@ -19,6 +19,18 @@ public class GameStateManager : MonoBehaviour
     [SerializeField]
     private TMPro.TMP_Text CanistersText;
 
+    [Tooltip("GameObject representing title graphic.")]
+    [SerializeField]
+    private GameObject TitleGraphic;
+
+    [Tooltip("GameObject representing moon harvester graphic.")]
+    [SerializeField]
+    private GameObject MoonHarvesterGraphic;
+
+    [Tooltip("GameObject representing actual moon harvester.")]
+    [SerializeField]
+    private GameObject MoonHarvester;
+
     [Tooltip("Helium depletion rate (how many fixed frames per unit depleted)")]
     [SerializeField]
     private int HeliumDepletionRate = 5;
@@ -52,6 +64,16 @@ public class GameStateManager : MonoBehaviour
             HeliumText.text = "Fuel: " + HeliumAmount.ToString();
             Counter = 0;
         }
+    }
+
+    public void StartGame()
+    {
+        TitleGraphic.SetActive(false);
+        HeliumText.gameObject.SetActive(true);
+        CanistersText.gameObject.SetActive(true);
+        MoonHarvesterGraphic.SetActive(false);
+        MoonHarvester.SetActive(true);
+        State = GameState.Playing;
     }
 
     public void HeliumCollected()

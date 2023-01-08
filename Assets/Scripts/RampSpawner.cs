@@ -47,12 +47,17 @@ public class RampSpawner : MonoBehaviour
 
     void Update()
     {
+        if (GameStateManager.Instance.State != GameStateManager.GameState.Playing)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0) && !IsRMBDown)
         {
             IsLMBDown = true;
             LMB_Down_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
-        else if (Input.GetMouseButtonUp(0) && !IsRMBDown)
+        else if (Input.GetMouseButtonUp(0) && !IsRMBDown && IsLMBDown)
         {
             IsLMBDown = false;
             LMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -71,7 +76,7 @@ public class RampSpawner : MonoBehaviour
             IsRMBDown = true;
             RMB_Down_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
-        else if (Input.GetMouseButtonUp(1) && !IsLMBDown) {
+        else if (Input.GetMouseButtonUp(1) && !IsLMBDown && IsRMBDown) {
             IsRMBDown = false;
             RMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             GameObject newRamp = TrySpawnRamp(RMB_Down_Position, RMB_Up_Position, Ramp.RampType.RMB, LayerMask.GetMask("Harvester"));

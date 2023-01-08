@@ -1,6 +1,14 @@
 LUDUM DARE 52: Harvest
 
 TODO:
+  - add play button and have it start game
+  - check for end game condition and show game over and replay button
+
+  - look into sfx
+  - tweak variables
+
+  - upload
+
   - revisit using other collider shapes since the impulse hack should probably fix original issue
   - determine what the limiting mechanic is (limited number of ramps at a time? limited total ramp length?)
 
