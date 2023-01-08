@@ -4,6 +4,13 @@ public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance = null;
 
+    public enum GameState
+    {
+        TitleScreen,
+        Playing,
+        GameOver,
+    }
+
     [Tooltip("UI Text object for rendering the helium value.")]
     [SerializeField]
     private TMPro.TMP_Text HeliumText;
@@ -24,6 +31,8 @@ public class GameStateManager : MonoBehaviour
     private int HeliumAmount = 1000;
     private int CanistersHarvested = 0;
 
+    public GameState State = GameState.TitleScreen;
+
     public virtual void Awake()
     {
         GameStateManager.Instance = this;
@@ -31,6 +40,11 @@ public class GameStateManager : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (Instance.State != GameState.Playing)
+        {
+            return;
+        }
+
         Counter++;
         if (Counter >= HeliumDepletionRate)
         {

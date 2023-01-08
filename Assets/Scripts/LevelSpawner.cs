@@ -80,6 +80,11 @@ public class LevelSpawner : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameStateManager.Instance.State != GameStateManager.GameState.Playing)
+        {
+            return;
+        }
+
         HeliumSpawnCounter++;
         if (HeliumSpawnCounter >= NextHeliumSpawn)
         {

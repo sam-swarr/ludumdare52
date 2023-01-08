@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 54976
+  controlID: 57468
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 54977
+  controlID: 57469
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 54930
+  controlID: 57470
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -558,9 +558,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -1.1881651, y: 1.4755385, z: -0.11227059}
+    m_Target: {x: -6.0817375, y: -2.8730576, z: -0.035609134}
     speed: 2
-    m_Value: {x: -1.1881651, y: 1.4755385, z: -0.11227059}
+    m_Value: {x: -6.0817375, y: -2.8730576, z: -0.035609134}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -611,9 +611,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 8.290354
+    m_Target: 2.732242
     speed: 2
-    m_Value: 8.290354
+    m_Value: 2.732242
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -671,7 +671,7 @@ MonoBehaviour:
   m_Zoom: -1
   m_ScrollPosition: {x: 0, y: 0}
   m_SelectedObject: {fileID: 0}
-  m_SelectedSpriteRectGUID: 5e97eb03825dee720800000000000000
+  m_SelectedSpriteRectGUID: 00000000000000000000000000000000
   m_LastUsedModuleTypeName: 
 --- !u!114 &10
 MonoBehaviour:
@@ -809,8 +809,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: bec1fdff
-    m_LastClickedInstanceID: -147010
+    m_SelectedInstanceIDs: d05f0000
+    m_LastClickedInstanceID: 24528
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c62300000000000090c200000ec500001060000092e00000f85f0000
     m_RenameOverlay:
@@ -928,7 +928,7 @@ MonoBehaviour:
     m_CachedPref: 160
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
-  m_LastInspectedObjectInstanceID: -147010
+  m_LastInspectedObjectInstanceID: 24528
   m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
   m_InspectorMode: 0

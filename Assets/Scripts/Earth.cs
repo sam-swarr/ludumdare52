@@ -12,6 +12,11 @@ public class Earth : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (GameStateManager.Instance.State != GameStateManager.GameState.Playing)
+        {
+            return;
+        }
+
         transform.position = new Vector3(
             transform.position.x - SpeedX,
             transform.position.y + SpeedY,
