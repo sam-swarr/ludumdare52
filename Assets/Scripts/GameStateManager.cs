@@ -35,7 +35,7 @@ public class GameStateManager : MonoBehaviour
         if (Counter >= HeliumDepletionRate)
         {
             HeliumAmount--;
-            HeliumText.text = HeliumAmount.ToString();
+            HeliumText.text = "Fuel: " + HeliumAmount.ToString();
             Counter = 0;
         }
     }
