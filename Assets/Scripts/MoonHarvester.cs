@@ -18,9 +18,18 @@ public class MoonHarvester : MonoBehaviour
     [SerializeField]
     private GameObject HarvesterReverse;
 
-    [Tooltip("Harvester horizontal force.")]
+    [Tooltip("GameObject with static sprite")]
+    [SerializeField]
+    private GameObject HarvesterStatic;
+
+    [Tooltip("Spawn position")]
+    [SerializeField]
+    private GameObject SpawnPosition;
+
+    [Tooltip("Harvester horizontal force magnitude.")]
     [SerializeField]
     private float HorizontalForce;
+    private int HorizontalForceDirection = 1;
 
     [Tooltip("Harvester max speed.")]
     [SerializeField]
@@ -41,22 +50,24 @@ public class MoonHarvester : MonoBehaviour
     private int NumFramesStationary;
     [SerializeField]
     private bool InContactWithGround = false;
-    [SerializeField]
-    private bool FlippedOver = false;
 
     // Start is called before the first frame update
     void Start()
     {
         MoonHarvester.Instance = this;
+        ResetPosition();
         MoonHarvesterRB = this.GetComponent<Rigidbody2D>();
         MoonHarvesterCollider = this.GetComponent<Collider2D>();
         PreviousPosition = transform.position;
-        HarvesterForward.SetActive(true);
-        HarvesterReverse.SetActive(false);
     }
 
     void FixedUpdate()
     {
+        if (GameStateManager.Instance.State != GameStateManager.GameState.Playing)
+        {
+            return;
+        }
+
         /**
          *   Check to see if harvester is stuck and should reverse directions.
          */
@@ -77,22 +88,12 @@ public class MoonHarvester : MonoBehaviour
         PreviousPosition = transform.position;
 
         /**
-         *  Check to see if harvester flipped over.
-         */
-        //if ((FlippedOver && !IsFlippedOver()) || (!FlippedOver && IsFlippedOver()))
-        //{
-        //    print("FLIP");
-        //    ReverseDirection();
-        //    FlippedOver = !FlippedOver;
-        //}
-
-        /**
          *  Apply force to move harvester.
          */
         InContactWithGround = MoonHarvesterCollider.IsTouchingLayers(LayerMask.GetMask("Platforms"));
         if (InContactWithGround)
         {
-            MoonHarvesterRB.AddForce(new Vector2(HorizontalForce, 0f));
+            MoonHarvesterRB.AddForce(new Vector2(HorizontalForce * HorizontalForceDirection, 0f));
 
             // limit harvester speed while on ground
             if (MoonHarvesterRB.velocity.magnitude >= MaxSpeed)
@@ -101,47 +102,36 @@ public class MoonHarvester : MonoBehaviour
             }
         }
     }
-
-    void OnCollisionEnter2D(Collision2D collision)
+    public void ResetPosition()
     {
-        //print(collision.otherCollider.name + " hit " + collision.collider.name);
-        //for (int i = 0; i < collision.contactCount; i++)
-        //{
-        //    ContactPoint2D contactPoint = collision.GetContact(i);
-        //    print("contacts point # " + i + ": " + contactPoint.point);
-        //    bool towardTop = isContactPointTowardTop(contactPoint.point);
-        //    if ((IsRightSideUp && towardTop) || (!IsRightSideUp && !towardTop))
-        //    {
-        //        print("FLIPPED OVER");
-        //        ReverseDirection();
-        //        IsRightSideUp = !IsRightSideUp;
-        //    }
-        //}
-        //Vector3 angleOfWall = collision.collider.gameObject.transform.rotation.eulerAngles;
-        //print(angleOfWall);
-        //foreach (ContactPoint2D contact in collision.contacts)
-        //{
-        //    //print(contact.collider.name + " hit " + contact.otherCollider.name);
-        //    //// Visualize the contact point
-        //    //Debug.DrawRay(contact.point, contact.normal, Color.white);
-        //}
+        HorizontalForceDirection = 1;
+        transform.SetPositionAndRotation(
+            SpawnPosition.transform.position,
+            SpawnPosition.transform.rotation);
+        HarvesterForward.SetActive(false);
+        HarvesterReverse.SetActive(false);
+        HarvesterStatic.SetActive(true);
     }
 
-    private bool IsFlippedOver()
+    public void TurnOn()
     {
-        Vector2 center = transform.position;
-        Vector2 topPoint = TopPoint.transform.position;
-        Vector2 centerToTop = topPoint - center;
-        float dot = Vector2.Dot(centerToTop, Vector2.up);
-        return dot > 0;
+        HarvesterForward.SetActive(true);
+        HarvesterReverse.SetActive(false);
+        HarvesterStatic.SetActive(false);
     }
 
+    public void TurnOff()
+    {
+        HarvesterForward.SetActive(false);
+        HarvesterReverse.SetActive(false);
+        HarvesterStatic.SetActive(true);
+    }
     private void ReverseDirection()
     {
-        HorizontalForce *= -1;
+        HorizontalForceDirection *= -1;
         // Give the harvester a little push so that it won't get stuck under platforms in some situations.
-        MoonHarvesterRB.AddForce(new Vector2(HorizontalForce * ReverseDirectionImpulseStrength, 0f), ForceMode2D.Impulse);
-        HarvesterForward.SetActive(HorizontalForce > 0);
-        HarvesterReverse.SetActive(HorizontalForce <= 0);
+        MoonHarvesterRB.AddForce(new Vector2(HorizontalForce * HorizontalForceDirection * ReverseDirectionImpulseStrength, 0f), ForceMode2D.Impulse);
+        HarvesterForward.SetActive(HorizontalForceDirection > 0);
+        HarvesterReverse.SetActive(HorizontalForceDirection <= 0);
     }
 }

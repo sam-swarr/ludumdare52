@@ -23,13 +23,25 @@ public class GameStateManager : MonoBehaviour
     [SerializeField]
     private GameObject TitleGraphic;
 
-    [Tooltip("GameObject representing moon harvester graphic.")]
+    [Tooltip("GameObject representing game over dialog.")]
     [SerializeField]
-    private GameObject MoonHarvesterGraphic;
+    private GameObject GameOverDialog;
 
     [Tooltip("GameObject representing actual moon harvester.")]
     [SerializeField]
-    private GameObject MoonHarvester;
+    private MoonHarvester MoonHarvester;
+
+    [Tooltip("GameObject representing RampSpawner.")]
+    [SerializeField]
+    private RampSpawner RampSpawner;
+
+    [Tooltip("GameObject representing LevelSpawner.")]
+    [SerializeField]
+    private LevelSpawner LevelSpawner;
+
+    [Tooltip("GameObject representing earth.")]
+    [SerializeField]
+    private Earth Earth;
 
     [Tooltip("Helium depletion rate (how many fixed frames per unit depleted)")]
     [SerializeField]
@@ -63,17 +75,50 @@ public class GameStateManager : MonoBehaviour
             HeliumAmount--;
             HeliumText.text = "Fuel: " + HeliumAmount.ToString();
             Counter = 0;
+            if (HeliumAmount <= 0)
+            {
+                GameOver();
+            }
         }
     }
 
     public void StartGame()
     {
         TitleGraphic.SetActive(false);
+
+        HeliumAmount = 1000;
+        HeliumText.text = HeliumAmount.ToString();
         HeliumText.gameObject.SetActive(true);
+
+        CanistersHarvested = 0;
+        CanistersText.text = "Canisters: " + CanistersHarvested.ToString();
         CanistersText.gameObject.SetActive(true);
-        MoonHarvesterGraphic.SetActive(false);
-        MoonHarvester.SetActive(true);
+
+        RampSpawner.Reset();
+        LevelSpawner.Reset();
+        MoonHarvester.TurnOn();
+
         State = GameState.Playing;
+    }
+
+    public void ShowTitleScreen()
+    {
+        State = GameState.TitleScreen;
+        GameOverDialog.SetActive(false);
+        TitleGraphic.SetActive(true);
+        HeliumText.gameObject.SetActive(false);
+        CanistersText.gameObject.SetActive(false);
+        MoonHarvester.ResetPosition();
+        Earth.Reset();
+        RampSpawner.Reset();
+        LevelSpawner.Reset();
+    }
+
+    public void GameOver()
+    {
+        State = GameState.GameOver;
+        GameOverDialog.SetActive(true);
+        MoonHarvester.TurnOff();
     }
 
     public void HeliumCollected()

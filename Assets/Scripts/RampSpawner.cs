@@ -13,7 +13,7 @@ public class RampSpawner : MonoBehaviour
 
     [Tooltip("Amount of helium per unit in length that ramps cost to build.")]
     [SerializeField]
-    private static float RampHeliumCost = 50f;
+    private float RampHeliumCost = 50f;
 
     [Tooltip("LineRenderer for showing where ramp will be built.")]
     [SerializeField]
@@ -118,13 +118,10 @@ public class RampSpawner : MonoBehaviour
 
     public GameObject TrySpawnRamp(Vector2 endpointOne, Vector2 endpointTwo, Ramp.RampType rampType, LayerMask layerMask)
     {
-        print("TRYING TO SPAWN RAMP BETWEEN :" + endpointOne + ", " + endpointTwo);
-
         // Early exit and don't spawn anything if ramp would intersect with something in the layer mask
         RaycastHit2D hit = Physics2D.Linecast(endpointOne, endpointTwo, layerMask);
         if (hit.collider != null)
         {
-            print("RAMP COLLIDES WITH " + hit.collider.name);
             return null;
         }
 
@@ -151,5 +148,21 @@ public class RampSpawner : MonoBehaviour
         }
 
         return newRamp;
+    }
+
+    public void Reset()
+    {
+        if (LMB_Ramp != null)
+        {
+            Destroy(LMB_Ramp);
+        }
+
+        if (RMB_Ramp != null)
+        {
+            Destroy(RMB_Ramp);
+        }
+
+        LMB_Ramp = null;
+        RMB_Ramp = null;
     }
 }

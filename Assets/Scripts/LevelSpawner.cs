@@ -63,6 +63,8 @@ public class LevelSpawner : MonoBehaviour
 
     private Vector2 HeliumSize = new(0.5f, 0.8f);
 
+    private List<HeliumCanister> HeliumCanisters = new List<HeliumCanister>();
+
     void Start()
     {
         MinX = LeftBorder.transform.position.x;
@@ -92,6 +94,7 @@ public class LevelSpawner : MonoBehaviour
             HeliumCanister hc = TrySpawnHelium(spawnPoint);
             if (hc != null)
             {
+                HeliumCanisters.Add(hc);
                 HeliumSpawnCounter = 0;
                 NextHeliumSpawn = Random.Range(MinDurationBetweenHeliumSpawns, MaxDurationBetweenHeliumSpawns);
             }
@@ -121,6 +124,18 @@ public class LevelSpawner : MonoBehaviour
         //        NumPlatformsSpawned++;
         //    }
         //}
+    }
+
+    public void Reset()
+    {
+        foreach(HeliumCanister hc in HeliumCanisters)
+        {
+            if (hc != null && hc.gameObject != null)
+            {
+                Destroy(hc.gameObject);
+            }
+        }
+        HeliumCanisters.Clear();
     }
 
     private HeliumCanister TrySpawnHelium(Vector2 spawnPoint)
