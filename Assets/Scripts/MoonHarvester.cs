@@ -10,6 +10,14 @@ public class MoonHarvester : MonoBehaviour
     [SerializeField]
     private GameObject TopPoint;
 
+    [Tooltip("GameObject with forward sprite animation")]
+    [SerializeField]
+    private GameObject HarvesterForward;
+
+    [Tooltip("GameObject with reverse sprite animation")]
+    [SerializeField]
+    private GameObject HarvesterReverse;
+
     [Tooltip("Harvester horizontal force.")]
     [SerializeField]
     private float HorizontalForce;
@@ -43,6 +51,8 @@ public class MoonHarvester : MonoBehaviour
         MoonHarvesterRB = this.GetComponent<Rigidbody2D>();
         MoonHarvesterCollider = this.GetComponent<Collider2D>();
         PreviousPosition = transform.position;
+        HarvesterForward.SetActive(true);
+        HarvesterReverse.SetActive(false);
     }
 
     void FixedUpdate()
@@ -131,5 +141,7 @@ public class MoonHarvester : MonoBehaviour
         HorizontalForce *= -1;
         // Give the harvester a little push so that it won't get stuck under platforms in some situations.
         MoonHarvesterRB.AddForce(new Vector2(HorizontalForce * ReverseDirectionImpulseStrength, 0f), ForceMode2D.Impulse);
+        HarvesterForward.SetActive(HorizontalForce > 0);
+        HarvesterReverse.SetActive(HorizontalForce <= 0);
     }
 }

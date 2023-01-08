@@ -6,6 +6,7 @@ public class Ramp : MonoBehaviour
     {
         LMB,
         RMB,
+        Static,
     }
     public void SetRampType(RampType type)
     {
@@ -14,9 +15,12 @@ public class Ramp : MonoBehaviour
         {
             c = Color.red;
         }
-        else
+        else if (type == RampType.RMB)
         {
             c = Color.blue;
+        } else
+        {
+            c = Color.gray;
         }
         this.GetComponent<SpriteRenderer>().color = c;
     }

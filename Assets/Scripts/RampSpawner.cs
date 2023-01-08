@@ -5,13 +5,15 @@ using UnityEngine.UI;
 
 public class RampSpawner : MonoBehaviour
 {
+    public static RampSpawner Instance = null;
+
     [Tooltip("Ramp Prefab")]
     [SerializeField]
     private GameObject RampPrefab;
 
     [Tooltip("Amount of helium per unit in length that ramps cost to build.")]
     [SerializeField]
-    private float RampHeliumCost = 50f;
+    private static float RampHeliumCost = 50f;
 
     [Tooltip("LineRenderer for showing where ramp will be built.")]
     [SerializeField]
@@ -38,6 +40,11 @@ public class RampSpawner : MonoBehaviour
     private Vector2 RMB_Up_Position;
     private GameObject RMB_Ramp;
 
+    private void Start()
+    {
+        RampSpawner.Instance = this;
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && !IsRMBDown)
@@ -49,7 +56,7 @@ public class RampSpawner : MonoBehaviour
         {
             IsLMBDown = false;
             LMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            GameObject newRamp = SpawnRamp(LMB_Down_Position, LMB_Up_Position, Ramp.RampType.LMB);
+            GameObject newRamp = TrySpawnRamp(LMB_Down_Position, LMB_Up_Position, Ramp.RampType.LMB, LayerMask.GetMask("Harvester"));
             if (newRamp != null)
             {
                 if (LMB_Ramp != null)
@@ -67,7 +74,7 @@ public class RampSpawner : MonoBehaviour
         else if (Input.GetMouseButtonUp(1) && !IsLMBDown) {
             IsRMBDown = false;
             RMB_Up_Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            GameObject newRamp = SpawnRamp(RMB_Down_Position, RMB_Up_Position, Ramp.RampType.RMB);
+            GameObject newRamp = TrySpawnRamp(RMB_Down_Position, RMB_Up_Position, Ramp.RampType.RMB, LayerMask.GetMask("Harvester"));
             if (newRamp != null)
             {
                 if (RMB_Ramp != null)
@@ -104,12 +111,15 @@ public class RampSpawner : MonoBehaviour
         }
     }
 
-    private GameObject SpawnRamp(Vector2 endpointOne, Vector2 endpointTwo, Ramp.RampType rampType)
+    public GameObject TrySpawnRamp(Vector2 endpointOne, Vector2 endpointTwo, Ramp.RampType rampType, LayerMask layerMask)
     {
-        // Early exit and don't spawn anything if ramp would intersect with harvester
-        RaycastHit2D harvesterHit = Physics2D.Linecast(endpointOne, endpointTwo, LayerMask.GetMask("Harvester"));
-        if (harvesterHit.collider != null)
+        print("TRYING TO SPAWN RAMP BETWEEN :" + endpointOne + ", " + endpointTwo);
+
+        // Early exit and don't spawn anything if ramp would intersect with something in the layer mask
+        RaycastHit2D hit = Physics2D.Linecast(endpointOne, endpointTwo, layerMask);
+        if (hit.collider != null)
         {
+            print("RAMP COLLIDES WITH " + hit.collider.name);
             return null;
         }
 
@@ -129,7 +139,11 @@ public class RampSpawner : MonoBehaviour
             newRamp.transform.localScale.z);
         newRamp.GetComponent<Ramp>().SetRampType(rampType);
 
-        GameStateManager.Instance.RampBuilt((int)(rampLength * RampHeliumCost));
+        // For ramps built by the player, deduct helium for building the ramp.
+        if (rampType != Ramp.RampType.Static)
+        {
+            GameStateManager.Instance.RampBuilt((int)(rampLength * RampHeliumCost));
+        }
 
         return newRamp;
     }
